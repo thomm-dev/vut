@@ -1,0 +1,328 @@
+@import 'tailwindcss';
+
+/* ----------------------------- fontes locais ----------------------------- */
+
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-600.woff2') format('woff2');
+  font-weight: 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Inter';
+  src: url('/fonts/inter-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jbmono-400.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jbmono-500.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jbmono-700.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+/* ------------------------------- tokens ---------------------------------- */
+/* A interface e monocromatica. A carta e a unica coisa colorida da tela.    */
+
+:root {
+  --bg: #0a0a0b;
+  --panel: #0e0f11;
+  --line: #1c1e22;
+  --line2: #262a30;
+  --txt: #e9eaec;
+  --dim: #6b7280;
+  --ok: #4ade80;
+  --warn: #fbbf24;
+  --erro: #e05a5a;
+  /* cor de acento da carta atual — so entra via JS, so a carta usa */
+  --acento: #2fd47a;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-panel: var(--panel);
+  --color-line: var(--line);
+  --color-line2: var(--line2);
+  --color-txt: var(--txt);
+  --color-dim: var(--dim);
+  --color-ok: var(--ok);
+  --color-warn: var(--warn);
+  --color-erro: var(--erro);
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', monospace;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 4px 4px;
+  color: var(--txt);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--txt);
+  color: #000;
+}
+
+/* ----------------------------- componentes -------------------------------- */
+
+@layer components {
+  /* Painel: borda de 1px e marcacao de canto. Sem sombra, sem glow. */
+  .painel {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--line);
+  }
+  .painel::before,
+  .painel::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-color: var(--line2);
+    border-style: solid;
+    pointer-events: none;
+  }
+  .painel::before {
+    top: -1px;
+    left: -1px;
+    border-width: 1px 0 0 1px;
+    border-color: var(--dim);
+  }
+  .painel::after {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 1px 1px 0;
+    border-color: var(--dim);
+  }
+
+  .rotulo {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--dim);
+    line-height: 1;
+  }
+  .rotulo::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: currentColor;
+    flex: none;
+  }
+  .rotulo-ok::before {
+    background: var(--ok);
+  }
+  .rotulo-warn::before {
+    background: var(--warn);
+  }
+  .rotulo-erro::before {
+    background: var(--erro);
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 18px;
+    border-radius: 2px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+    border: 1px solid transparent;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s, opacity 0.15s;
+    cursor: pointer;
+    user-select: none;
+  }
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn-primario {
+    background: #fff;
+    color: #000;
+  }
+  .btn-primario:not(:disabled):hover {
+    background: #d4d6d9;
+  }
+  .btn-secundario {
+    background: transparent;
+    color: var(--txt);
+    border-color: var(--line2);
+  }
+  .btn-secundario:not(:disabled):hover {
+    border-color: var(--dim);
+    background: rgba(255, 255, 255, 0.03);
+  }
+
+  .campo {
+    width: 100%;
+    height: 60px;
+    background: #08090a;
+    border: 1px solid var(--line2);
+    border-radius: 2px;
+    padding: 0 16px;
+    font-family: var(--font-mono);
+    font-size: 17px; /* >=16px: evita o zoom automatico do iOS */
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--txt);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .campo::placeholder {
+    color: #4b5159;
+  }
+  .campo:focus {
+    border-color: var(--dim);
+  }
+  .campo-erro {
+    border-color: var(--erro);
+  }
+
+  .divisoria {
+    height: 1px;
+    background: var(--line);
+    width: 100%;
+  }
+}
+
+/* ------------------------------ animacoes --------------------------------- */
+
+@keyframes surge {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.surge {
+  animation: surge 0.34s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes revela-carta {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.revela-carta {
+  animation: revela-carta 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes pulsa {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+.pulsa {
+  animation: pulsa 1.3s ease-in-out infinite;
+}
+
+@keyframes cursor {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.cursor::after {
+  content: '_';
+  animation: cursor 1s step-end infinite;
+}
+
+/* modal: veu escurece, folha sobe (vira bottom sheet no mobile) */
+@keyframes veu-entra {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.veu {
+  animation: veu-entra 0.18s ease-out both;
+}
+
+@keyframes folha-entra {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.folha {
+  animation: folha-entra 0.26s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .surge,
+  .revela-carta,
+  .pulsa,
+  .veu,
+  .folha,
+  .cursor::after {
+    animation: none !important;
+  }
+}
